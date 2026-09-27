@@ -1,1 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha IA Privada - Painel Admin</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background-color: #030712; color: #f3f4f6; display: flex; flex-direction: column; height: 100vh; }
+        header { background-color: #111827; border-bottom: 1px solid rgba(185, 28, 28, 0.4); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .logo-area { display: flex; align-items: center; gap: 12px; }
+        .icon-box { background-color: #dc2626; color: white; padding: 10px; border-radius: 12px; font-weight: bold; }
+        h1 { font-size: 18px; color: #f9fafb; }
+        .subtitle { font-size: 12px; color: #f87171; margin-top: 2px; }
+        .status { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #9ca3af; }
+        .dot { width: 8px; height: 8px; background-color: #ef4444; border-radius: 50%; display: inline-block; }
+        
+        main { flex: 1; max-width: 800px; width: 100%; margin: 0 auto; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; }
+        #chat-history { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; padding-right: 5px; max-height: calc(100vh - 180px); }
+        
+        .message { display: flex; gap: 10px; max-width: 85%; }
+        .message.user { align-self: flex-end; flex-direction: row-reverse; }
+        .msg-bubble { padding: 12px 16px; border-radius: 16px; font-size: 14px; line-height: 1.4; }
+        .ai .msg-bubble { background-color: #111827; border: 1px solid #1f2937; color: #e5e7eb; border-top-left-radius: 2px; }
+        .user .msg-bubble { background-color: #dc2626; color: white; border-top-right-radius: 2px; }
+        .msg-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; }
+        .ai .msg-icon { background-color: #dc2626; color: white; }
+        .user .msg-icon { background-color: #1f2937; color: #f87171; }
 
+        form { display: flex; background-color: #111827; border: 1px solid rgba(185, 28, 28, 0.4); border-radius: 14px; padding: 6px; margin-top: 15px; }
+        input { flex: 1; background: transparent; border: none; outline: none; padding: 10px; color: white; font-size: 14px; }
+        input::placeholder { color: #6b7280; }
+        button { background-color: #dc2626; color: white; border: none; padding: 10px 18px; border-radius: 10px; cursor: pointer; font-weight: bold; transition: background 0.2s; }
+        button:hover { background-color: b91c1c; }
+        .footer-note { text-align: center; font-size: 10px; color: #6b7280; margin-top: 8px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-area">
+            <div class="icon-box">🤖</div>
+            <div>
+                <h1>Minha IA Privada</h1>
+                <div class="subtitle">🛡️ Uso Pessoal & Exclusivo</div>
+            </div>
+        </div>
+        <div class="status">
+            <span class="dot"></span> Online
+        </div>
+    </header>
+
+    <main>
+        <div id="chat-history">
+            <div class="message ai">
+                <div class="msg-icon">🤖</div>
+                <div class="msg-bubble">
+                    Olá, Franklin! Sou sua IA privada. Estou pronta para pesquisar qualquer assunto em todo o país e no mundo inteiro sem restrições. Como posso te ajudar hoje?
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <form id="chat-form">
+                <input type="text" id="user-input" placeholder="Digite sua mensagem para a IA..." autocomplete="off" required>
+                <button type="submit">Enviar</button>
+            </form>
+            <div class="footer-note">Painel Administrativo v2.0 - Totalmente livre e sem travas geográficas.</div>
+        </div>
+    </main>
+
+    <script>
+        const form = document.getElementById('chat-form');
+        const input = document.getElementById('user-input');
+        const history = document.getElementById('chat-history');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const text = input.value.trim();
+            if (!text) return;
+
+            // Mensagem do Usuário
+            const userDiv = document.createElement('div');
+            userDiv.className = 'message user';
+            userDiv.innerHTML = <div class="msg-icon">👤</div><div class="msg-bubble">${escapeHtml(text)}</div>;
+            history.appendChild(userDiv);
+            input.value = '';
+            history.scrollTop = history.scrollHeight;
+
+            // Resposta da IA
+            setTimeout(() => {
+                const aiDiv = document.createElement('div');
+                aiDiv.className = 'message ai';
+                aiDiv.innerHTML = <div class="msg-icon">🤖</div><div class="msg-bubble">Entendido, Franklin! Processando sua solicitação sobre "<strong>${escapeHtml(text)}</strong>" em todo o território nacional. Sem restrições geográficas.</div>;
+                history.appendChild(aiDiv);
+                history.scrollTop = history.scrollHeight;
+            }, 600);
+        });
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>
